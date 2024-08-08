@@ -1,0 +1,65 @@
+local RunService = game:GetService("RunService")
+
+local screenGui = Instance.new("ScreenGui")
+screenGui.ResetOnSpawn = false
+screenGui.Parent = game.CoreGui
+
+local notificationFrame = Instance.new("Frame")
+notificationFrame.Size = UDim2.new(0, 200, 0, 120)
+notificationFrame.Position = UDim2.new(0.5, -100, 0.5, -60)  -- Centered in the middle of the screen
+notificationFrame.BackgroundColor3 = Color3.new(0.2, 0.2, 0.2)
+notificationFrame.BorderSizePixel = 0
+notificationFrame.Visible = false
+notificationFrame.Draggable = true
+notificationFrame.Parent = screenGui
+
+local notificationLoader = Instance.new("TextLabel")
+notificationLoader.Size = UDim2.new(1, 0, 0, 30)
+notificationLoader.Position = UDim2.new(0, 0, 0, 0)
+notificationLoader.Text = "Loader"
+notificationLoader.TextColor3 = Color3.new(1, 1, 1)
+notificationLoader.BackgroundTransparency = 1
+notificationLoader.TextScaled = true
+notificationLoader.Parent = notificationFrame
+
+local executeButton = Instance.new("TextButton")
+executeButton.Size = UDim2.new(0, 140, 0, 40)  -- Made the button bigger
+executeButton.Position = UDim2.new(0.5, -70, 1, -50)  -- Centered horizontally and positioned at the bottom
+executeButton.Text = "Execute"
+executeButton.BackgroundColor3 = Color3.new(1, 1, 1)
+executeButton.TextColor3 = Color3.new(0, 0, 0)
+executeButton.BorderSizePixel = 0
+executeButton.Parent = notificationFrame
+
+local function show(title)
+    notificationLoader.Text = title
+    notificationFrame.Visible = true
+end
+
+local function closeNotification()
+    local closeDuration = 0.5
+    local closeStartTime = tick()
+    local closeEndTime = closeStartTime + closeDuration
+
+    local connection
+    connection = RunService.RenderStepped:Connect(function()
+        local closeNow = tick()
+        local closeRemainingTime = closeEndTime - closeNow
+        local scale = math.max(0, closeRemainingTime / closeDuration)
+        notificationFrame.Size = UDim2.new(0, 200 * scale, 0, 120 * scale)
+        notificationFrame.Position = UDim2.new(0.5, -200 * scale / 2, 0.5, -120 * scale / 2)
+        notificationFrame.BackgroundTransparency = 1 - scale
+
+        if scale <= 0 then
+            notificationFrame.Visible = false
+            connection:Disconnect()
+        end
+    end)
+end
+
+executeButton.MouseButton1Click:Connect(function()
+    loadstring(game:HttpGet("https://raw.githubusercontent.com/smile3911/Aimbot/main/fixed-universal-aimbot"))()
+    closeNotification()
+end)
+
+show("Loader")
