@@ -58,7 +58,7 @@ local function closeNotification()
 end
 
 executeButton.MouseButton1Click:Connect(function()
-    loadstring(game:HttpGet("https://raw.githubusercontent.com/smile3911/Aimbot/main/Updatedyiea"))()
+    loadstring(game:HttpGet("https://raw.githubusercontent.com/smile3911/Aimbot/main/fixed2stuff"))()
     closeNotification()
 end)
 
